@@ -12,6 +12,8 @@ import walker.Info;
 public class Crypto {
 	private static final String BaseSecretKey = "uH9JF2cHf6OppaC1";
 	//private static final String UnusedSecretKey = "A1dPUcrvur2CRQyl";	
+
+	// sdo.com: rBwj1MIAivVN222b
 	
 	
 	
