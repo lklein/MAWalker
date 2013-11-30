@@ -1,31 +1,32 @@
 package action;
 
 import info.CreateXML;
-import info.GetUserInfo;
+import info.FloorInfo;
 
 import java.util.ArrayList;
+
 import net.Process;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
 
 import start.Info;
 
-public class Login {
-	
-	//登陆url
-	private static final String URL_LOGIN = Info.LoginServer + "/connect/app/login?cyt=1";
+public class BattleAreaBoss {
+	//跑图url
+	private static final String BATTLE_AREA_BOSS = Info.LoginServer + "/connect/app/exploration/battle?cyt=1";
 
 	//返回结果
 	private static byte[] result;
 	
-	public static boolean run() throws Exception {
+	public static boolean run(FloorInfo floorInfo) throws Exception {
 		Document doc;
 		ArrayList<NameValuePair> al = new ArrayList<NameValuePair>();
-		al.add(new BasicNameValuePair("login_id",Info.LoginId));
-		al.add(new BasicNameValuePair("password",Info.LoginPw));
+		al.add(new BasicNameValuePair("area_id",floorInfo.id));
+		al.add(new BasicNameValuePair("floor_id",Process.info.floorId));
 		try {
-			result = Process.connect.connectToServer(URL_LOGIN, al);
+			result = Process.connect.connectToServer(BATTLE_AREA_BOSS, al);
 		} catch (Exception ex) {
 			throw ex;
 		}
@@ -45,18 +46,15 @@ public class Login {
 	private static boolean parse(Document doc) throws Exception {
 		try {
 			
-			CreateXML.createXML(doc, "userInfo");
-			
             if (ExceptionCatch.catchException(doc)) {
 				return false;
 			}
-			
-			GetUserInfo.getUserInfo(doc,true);
-			
+            CreateXML.createXML(doc, "123");
+            
+            Process.info.bossId = 0;
 		} catch (Exception ex) {
 			throw ex;
 		}
 		return true;
 	}
-	
 }

@@ -15,8 +15,11 @@ public class ActionRegistry {
 		GUILD_BATTLE,
 		SELL_CARD,
 		LV_UP,
-		PFB_GOOD,
-		RECV_PFB_GOOD,
-		USE
+		PVP,
+		GET_NONAME_LIST,
+		FAIRY_HISTORY,
+		CHANGE_CARD_ITEMS,
+		GET_CARD_ITEM,
+		FAIRY_INFO
 	}
 }

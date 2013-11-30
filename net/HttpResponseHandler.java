@@ -30,12 +30,20 @@ public final class HttpResponseHandler implements ResponseHandler<byte[]> {
 					System.out.println("Gzipped");
 					return baos.toByteArray();
 				} catch (Exception e) {
-					throw e;
+					try {
+						throw e;
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
 				} finally {
 					try {
 						if (gis != null) gis.close();
 					} catch (Exception ex) {
-						throw ex;
+						try {
+							throw ex;
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			} else {

@@ -1,8 +1,8 @@
 package action;
 
-import info.CreateXML;
+import info.FairyInfo;
+import info.GetBattleResult;
 import info.GetUserInfo;
-
 import java.util.ArrayList;
 import net.Process;
 import org.apache.http.NameValuePair;
@@ -11,21 +11,22 @@ import org.w3c.dom.Document;
 
 import start.Info;
 
-public class Login {
+public class FairyBattle {
 	
-	//登陆url
-	private static final String URL_LOGIN = Info.LoginServer + "/connect/app/login?cyt=1";
+	//获取妖精列表
+	private static final String URL_FAIRY_BATTLE = Info.LoginServer + "/connect/app/exploration/fairybattle?cyt=1";
 
 	//返回结果
 	private static byte[] result;
 	
-	public static boolean run() throws Exception {
+	
+	public static boolean run(FairyInfo fairyInfo) throws Exception {
 		Document doc;
 		ArrayList<NameValuePair> al = new ArrayList<NameValuePair>();
-		al.add(new BasicNameValuePair("login_id",Info.LoginId));
-		al.add(new BasicNameValuePair("password",Info.LoginPw));
+		al.add(new BasicNameValuePair("serial_id", fairyInfo.serialId));
+		al.add(new BasicNameValuePair("user_id", fairyInfo.userId));
 		try {
-			result = Process.connect.connectToServer(URL_LOGIN, al);
+			result = Process.connect.connectToServer(URL_FAIRY_BATTLE, al);
 		} catch (Exception ex) {
 			throw ex;
 		}
@@ -45,14 +46,12 @@ public class Login {
 	private static boolean parse(Document doc) throws Exception {
 		try {
 			
-			CreateXML.createXML(doc, "userInfo");
-			
             if (ExceptionCatch.catchException(doc)) {
 				return false;
 			}
 			
-			GetUserInfo.getUserInfo(doc,true);
-			
+			GetUserInfo.getUserInfo(doc,false);
+			GetBattleResult.getBattleResult(doc);
 		} catch (Exception ex) {
 			throw ex;
 		}
