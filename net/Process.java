@@ -128,10 +128,8 @@ public class Process {
 			try {
 				if (Login.run()) {
 					Go.log("cookie:" + info.cookie);
-					Go.log("Logged in as" + info.userName + ", level: "
-							+ info.userLv + ", max AP: " + info.apMax + ", current AP: "
-							+ info.apCurrent + ", max BC: " + info.bcMax + ", current BC: "
-							+ info.bcCurrent + ", free points: " + info.freeApBcPoint);
+					Go.logStatus(info);
+					
 					info.events.push(Info.EventType.fairyAppear);
 				} else {
 					info.events.push(Info.EventType.notLoggedIn);
@@ -153,7 +151,7 @@ public class Process {
 				if (info.apCurrent >= info.floorCost && Info.isRun.equals("1")
 						&& info.bcCurrent < Info.stopRunWhenBcMore
 						&& Info.canRun == 1) {
-					Go.log("Begin running map");
+					Go.logBeginRunMap();
 					info.events.push(Info.EventType.needFloorInfo);
 					break;
 				}
@@ -164,7 +162,7 @@ public class Process {
 					info.events.push(Info.EventType.getNoNameList);
 					break;
 				}
-				Go.log("No untouched fairy, waiting " + Info.waitTime + "seconds to relist");
+				Go.logWaitRelist();
 				Thread.sleep(1000 * Info.waitTime);
 				info.events.push(Info.EventType.fairyAppear);
 			}
@@ -186,7 +184,7 @@ public class Process {
 				if (info.apCurrent >= info.floorCost && Info.isRun.equals("1")
 						&& info.bcCurrent < Info.stopRunWhenBcMore
 						&& Info.canRun == 1) {
-					Go.log("Begin running map");
+					Go.logBeginRunMap();
 					info.events.push(Info.EventType.needFloorInfo);
 					break;
 				}
@@ -202,16 +200,14 @@ public class Process {
 						info.events.push(Info.EventType.levelUp);
 						break;
 					} else {
-						Go.log("Battle result: " + info.battleResult + ", got exp: "
-								+ info.exp + ", gold: " + info.gold + ", remaining BC: "
-								+ info.bcCurrent + ", exp to next level: " + info.nextExp
-								+ "exp");
+						Go.logBattle(info);
 					}
 				}
 				if (PVPRedirect.run()) {
 					Go.log("Refresh PvP list");
 				}
-				Go.log("Waiting for battle CD...");
+				
+				Go.logWaitCD();
 				Thread.sleep(1000 * 20);
 				// 每点名一个人就检测一下是否有妖精出现
 				GetFairyList.run();
@@ -238,7 +234,7 @@ public class Process {
 				if (info.apCurrent >= info.floorCost && Info.isRun.equals("1")
 						&& info.bcCurrent < Info.stopRunWhenBcMore
 						&& Info.canRun == 1) {
-					Go.log("Begin running map");
+					Go.logBeginRunMap();
 					info.events.push(Info.EventType.needFloorInfo);
 					break;
 				}
@@ -249,7 +245,7 @@ public class Process {
 					info.events.push(Info.EventType.getNoNameList);
 					break;
 				}
-				Go.log("No untouched fairy, waiting " + Info.waitTime + "seconds to relist");
+				Go.logWaitRelist();
 				Thread.sleep(1000 * Info.waitTime);
 			}
 			info.events.push(Info.EventType.fairyAppear);
@@ -260,9 +256,9 @@ public class Process {
 				BigDecimal i = BigDecimal.valueOf(fairyInfo.currentHp).divide(
 						BigDecimal.valueOf(fairyInfo.maxHp), 2,
 						BigDecimal.ROUND_HALF_DOWN);
-				Go.log("User: " + fairyInfo.userName + ", fairy: " + fairyInfo.name
-						+ ", level: " + fairyInfo.lv + ", maxHP: " + fairyInfo.maxHp
-						+ ", HP: " + fairyInfo.currentHp);
+				
+				Go.logFairy(fairyInfo);
+				
 				int fairyLv = Integer.parseInt(fairyInfo.lv);
 				ChangeCardItems.run(Info.wolf, Info.wolfLr);
 				// 一般来说，名字带"的"的都是觉醒……中文做utf编码处理，防止乱码
@@ -299,10 +295,7 @@ public class Process {
 						info.events.push(Info.EventType.levelUp);
 						break;
 					} else {
-						Go.log("Battle result: " + info.battleResult + ", got exp: "
-								+ info.exp + ", gold: " + info.gold + ", remaining AP: "
-								+ info.apCurrent + ", remaining BC: " + info.bcCurrent
-								+ ", exp to next level: " + info.nextExp + "exp");
+						Go.logBattle(info);
 					}
 
 				}
@@ -311,7 +304,7 @@ public class Process {
 					Go.log("BC lower than " + Info.lickCost + ", recovering...");
 					Thread.sleep(1000 * 60 * 2);
 				} else {
-					Go.log("Waiting for battle CD...");
+					Go.logWaitCD();
 					Thread.sleep(1000 * 20);
 				}
 			}
@@ -324,10 +317,7 @@ public class Process {
 				Process.info.isLvUp = false;
 				Process.info.freeApBcPoint = 0;
 				Go.log("Free points spent");
-				Go.log(info.userName + ", level: " + info.userLv + ", max AP: "
-						+ info.apMax + ", current AP: " + info.apCurrent + ", max BC: "
-						+ info.bcMax + ", current BC: " + info.bcCurrent + ", free points: "
-						+ info.freeApBcPoint);
+				Go.logStatus(info);
 			}
 			info.events.push(Info.EventType.fairyAppear);
 			break;
@@ -366,21 +356,16 @@ public class Process {
 					GetFloorInfo.run(floorInfo, true);
 					isClear = true;
 				}
-				Go.log("获取地图完毕");
+				Go.log("Map loaded");
 				if (!info.floorId.equals("") && info.floorCost != 0) {
 					if (info.apCurrent < info.floorCost) {
-						Go.log("ap不足");
+						Go.log("Not enough AP");
 						info.events.push(Info.EventType.fairyAppear);
 						break;
 					} else {
 						while (FloorRun.run(floorInfo)) {
-							Go.log(floorInfo.name + ", floor" + info.floorId
-									+ ", spent AP " + info.floorCost + ", gained exp: "
-									+ info.getExp + ", gold: " + info.runGold
-									+ ", completed " + info.progress + "%, event: "
-									+ info.event_type + ", current AP: "
-									+ info.apCurrent + ", current BC: "
-									+ info.bcCurrent);
+							Go.logFloor(floorInfo, info);
+						
 							// 地图踏破则更新楼层
 							if (info.progress == 100 && !isClear) {
 								info.floorId = info.nextFloorId;

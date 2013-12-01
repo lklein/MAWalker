@@ -21,11 +21,11 @@ public class LevelUp {
 		Document doc;
 		ArrayList<NameValuePair> al = new ArrayList<NameValuePair>();
 		if(Info.autoPoint.equals("ap")){
-			Go.log("分配剩余属性点到ap");
+			Go.log("Spend skill points on AP");
 			al.add(new BasicNameValuePair("ap",""+Process.info.freeApBcPoint));
 			al.add(new BasicNameValuePair("bc","0"));
 		}else{
-			Go.log("分配剩余属性点到bc");
+			Go.log("Spend skill points on BC");
 			al.add(new BasicNameValuePair("ap","0"));
 			al.add(new BasicNameValuePair("bc",""+Process.info.freeApBcPoint));
 		}

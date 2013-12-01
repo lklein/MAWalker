@@ -21,11 +21,11 @@ public class ExceptionCatch {
 				if(errorCode.equals("9000")){
 					throw new Exception(errorCode+"："+errorMessage.replace("\n", "，"));
 				}
-				Go.log("错误code："+errorCode+",错误内容："+errorMessage.replace("\n", "，"));
+				Go.log("Error "+errorCode+", error type: "+errorMessage.replace("\n", "，"));
 				return true;
 			}
 		} catch (XPathExpressionException e) {
-			Go.log("解析xml错误");
+			Go.log("Error arsing XML");
 			return true;
 		}
 		return false;
