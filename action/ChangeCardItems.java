@@ -1,11 +1,14 @@
 package action;
 
 import java.util.ArrayList;
+
 import net.Process;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
 
+import start.Go;
 import start.Info;
 
 public class ChangeCardItems {
@@ -17,6 +20,7 @@ public class ChangeCardItems {
 	private static byte[] result;
 	
 	public static boolean run(String card,String lr) throws Exception {
+		Go.log("Change card to: " + card);
 		Document doc;
 		ArrayList<NameValuePair> al = new ArrayList<NameValuePair>();
 		al.add(new BasicNameValuePair("C",card));
