@@ -163,6 +163,7 @@ public class Process {
 					break;
 				}
 				Go.logWaitRelist();
+				Go.logStatus(info);
 				Thread.sleep(1000 * Info.waitTime);
 				info.events.push(Info.EventType.fairyAppear);
 			}
@@ -246,6 +247,7 @@ public class Process {
 					break;
 				}
 				Go.logWaitRelist();
+				Go.logStatus(info);
 				Thread.sleep(1000 * Info.waitTime);
 			}
 			info.events.push(Info.EventType.fairyAppear);
